@@ -99,9 +99,11 @@ def main():
         with torch.no_grad():
             with tqdm.tqdm(loader, mininterval=2) as pbar:
                 for img, anns in pbar:
+                    print(':D')
                     bs = img.size(0)
                     img = img.cuda()
-
+                    print(img.shape, img.mean(), img.std())
+                    
                     masks.zero_()
                     for model in models:
                         mask = model(img)
