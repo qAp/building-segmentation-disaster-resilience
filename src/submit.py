@@ -112,6 +112,7 @@ def main():
 
                         # vertical flip
                         if tta > 1:
+                            print('vertical flip')
                             mask = model(torch.flip(img, dims=[-1]))
                             if thresh_dice is not None:
                                 masks[:bs] += torch.flip(torch.sigmoid(mask), dims=[-1])
@@ -120,6 +121,7 @@ def main():
 
                         # horizontal flip
                         if tta > 2:
+                            print('horizontal flip')
                             mask = model(torch.flip(img, dims=[-2]))
                             if thresh_dice is not None:
                                 masks[:bs] += torch.flip(torch.sigmoid(mask), dims=[-2])
@@ -127,6 +129,7 @@ def main():
                                 masks[:bs] += torch.flip(torch.softmax(mask, dim=1), dims=[-2])
 
                         if tta > 3:
+                            print('vertical + horizontal flip')
                             # vertical + horizontal flip
                             mask = model(torch.flip(img, dims=[-1, -2]))
                             if thresh_dice is not None:
@@ -148,6 +151,9 @@ def main():
                                 m = A.Resize(1024, 1024)(image=np.zeros((512, 512, 3), dtype='uint8'),
                                                          mask=m)['mask']
 
+                            print(m.mean(), m.std(), m.min(), m.max())
+                            m_ = ((m*255).astype('uint8')/255).astype('uint8')
+                            print(m_.mean(), m_.std(), m_.min(), m_.max())
                             m = Image.fromarray(((m*255).astype('uint8')/255).astype('uint8'))
                             m.save(str(to_save / annotation.replace('.jpg', '.TIF')), compression='tiff_deflate')
 
