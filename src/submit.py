@@ -106,12 +106,17 @@ def main():
                     
                     masks.zero_()
                     for model in models:
+                        print('model')
                         mask = model(img)
+                        print(torch.sigmoid(mask).shape, torch.softmax(mask, dim=1).shape)
                         if thresh_dice is not None:
+                            print('thresh_dice is not None.')
                             masks[:bs] += torch.sigmoid(mask)
                         else:
+                            print('thresh_dice is None.')
                             masks[:bs] += torch.softmax(mask, dim=1)
 
+                        print('tta', tta)
                         # vertical flip
                         if tta > 1:
                             print('vertical flip')
