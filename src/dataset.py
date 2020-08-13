@@ -67,6 +67,19 @@ def to_cat(mask):
     
     return mask
 
+
+def to_2cat(mask):
+    '''
+    Converts a (height, width, 3) mask to a
+    (height, width, 1) mask.
+    '''
+    assert np.allclose(mask[...,0], mask[...,1])
+    assert np.allclose(mask[...,0], mask[...,2])
+    assert np.allclose(mask[...,1], mask[...,2])
+    mask = mask[...,0]
+    mask = (mask > 0).astype(np.int32)[...,None]
+    return mask
+
     
 class CloudsDS(torch.utils.data.Dataset):
     def __init__(self, items, root, transform, w3m=False):
@@ -88,7 +101,7 @@ class CloudsDS(torch.utils.data.Dataset):
         path_to_mask = item.mask_path
         if self.w3m:
             img = read_img_cv(path_to_img)
-            mask = to_cat(read_img_cv(path_to_mask))
+            mask = to_2cat(read_img_cv(path_to_mask))
         else:
             img = read_img_cv(path_to_img)      
 #             mask = (read_img_cv(path_to_mask, is_grey=True)).astype('float32')[..., None]
