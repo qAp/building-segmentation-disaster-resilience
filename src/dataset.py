@@ -99,19 +99,9 @@ class CloudsDS(torch.utils.data.Dataset):
 #         path_to_mask = root / f'z{item.zoom}' / 'masks' / item.fname
         path_to_img = item.fname
         path_to_mask = item.mask_path
-        if self.w3m:
-            img = read_img_cv(path_to_img)
-            mask = to_2cat(read_img_cv(path_to_mask))
-        else:
-            img = read_img_cv(path_to_img)      
-#             mask = (read_img_cv(path_to_mask, is_grey=True)).astype('float32')[..., None]
-            if not item.is_test:
-                mask = (read_img_cv(path_to_mask)[..., [0]]).astype('float32')
-                mask /= 255
-            else:
-                mask = (read_img_cv(path_to_mask, is_grey=True)).astype('float32')[..., None]
-#                 mask = aresize(image=mask)['image']
-        
+
+        img = read_img_cv(path_to_img)
+        mask = to_2cat(read_img_cv(path_to_mask))
         return self.transform(img, mask)
 
 
