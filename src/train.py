@@ -108,7 +108,7 @@ def loss_fn_kd(outputs, labels, teacher_outputs):
     return KD_loss
 
 
-def epoch_step(loader, desc, model, criterion, metrics, opt=None, batch_accum=1, teachers=None):
+def epoch_step(args, loader, desc, model, criterion, metrics, opt=None, batch_accum=1, teachers=None):
     is_train = opt is not None
     if is_train:
         model.train()
